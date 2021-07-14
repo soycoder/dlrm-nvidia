@@ -71,5 +71,5 @@ ENV NUMBER_OF_GPUS ${NUMBER_OF_GPUS:-16}
 FROM base AS image-machine-dgx-a100
 ENV NUMBER_OF_GPUS 8
 
-FROM image-machine-${DGX_VERSION} AS final
+FROM image-machine-${DGX_VERSION,,} AS final
 RUN echo "spark.worker.resource.gpu.amount    ${NUMBER_OF_GPUS}" >> /opt/spark/conf/spark-defaults.conf
