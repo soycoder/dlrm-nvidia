@@ -1,0 +1,13 @@
+ARG FROM_IMAGE_NAME=nvcr.io/nvidia/pytorch:21.04-py3
+FROM ${FROM_IMAGE_NAME}
+
+WORKDIR /workspace/dlrm
+
+RUN git clone https://github.com/NVIDIA/DeepLearningExamples
+RUN cp -a DeepLearningExamples/PyTorch/Recommendation/DLRM/* /workspace/dlrm/
+RUN rm -rf DeepLearningExamples/
+
+RUN pip install -r /workspace/dlrm/requirements.txt
+
+RUN chmod +x /workspace/dlrm/bind.sh
+RUN pip install --no-cache-dir -e .

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Copyright (c) 2021 NVIDIA CORPORATION. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG FROM_IMAGE_NAME=nvcr.io/nvidia/pytorch:21.04-py3
-FROM ${FROM_IMAGE_NAME}
+#########################################################################
+# File Name: run_spark.sh
 
-WORKDIR /workspace/dlrm
 
-RUN git clone https://github.com/NVIDIA/DeepLearningExamples
-RUN cp -a DeepLearningExamples/PyTorch/Recommendation/DLRM/* /workspace/dlrm/
-RUN rm -rf DeepLearningExamples/
-
-ADD requirements.txt .
-RUN pip install -r requirements.txt
-
-RUN chmod +x bind.sh
-RUN pip install --no-cache-dir -e .
+echo "Input mode option: $1"
+if [ "$1" = "CPU" ]
+then
+    echo "Run with CPU.";
+    shift
+    ./run_spark_cpu.sh ${@}
+elif [ "$1" = "GPU" ]
+then
+    echo "Run with GPU.";
+    shift
+    if [ "$DGX_VERSION" = "DGX-2" ]
+    then
+        ./run_spark_gpu_DGX-2.sh ${@}
+    else
+        ./run_spark_gpu_DGX-A100.sh ${@}
+    fi
+else
+   echo "Please choose mode (CPU/GPU).";
+fi

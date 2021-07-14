@@ -12,17 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG FROM_IMAGE_NAME=nvcr.io/nvidia/pytorch:21.04-py3
-FROM ${FROM_IMAGE_NAME}
+#! /bin/bash
 
-WORKDIR /workspace/dlrm
+set -e
+set -x
 
-RUN git clone https://github.com/NVIDIA/DeepLearningExamples
-RUN cp -a DeepLearningExamples/PyTorch/Recommendation/DLRM/* /workspace/dlrm/
-RUN rm -rf DeepLearningExamples/
+download_dir=${1:-'/data/dlrm/criteo'}
 
-ADD requirements.txt .
-RUN pip install -r requirements.txt
+cd ${download_dir}
+for i in $(seq 0 23); do
+    filename=day_${i}
+    if [ -f $filename ]; then
+        echo "$filename exists, OK"
+    else
+        echo "$filename does not exist. Please follow the instructions at: http://labs.criteo.com/2013/12/download-terabyte-click-logs/ to download it"
+        exit 1
+    fi
+done
+cd -
 
-RUN chmod +x bind.sh
-RUN pip install --no-cache-dir -e .
+echo "Criteo data verified"
