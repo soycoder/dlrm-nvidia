@@ -57,6 +57,7 @@ ENV PYSPARK_PYTHON /conda/envs/rapids/bin/python
 ENV PYSPARK_DRIVER_PYTHON /conda/envs/rapids/bin/python
 ENV DGX_VERSION $DGX_VERSION
 ENV SPARK_VERSION $SPARK_VERSION
+ENV DGX_VERSION_LOWERCASE $(echo $DGX_VERSION | tr '[:upper:]' '[:lower:]')
 
 SHELL ["/bin/bash", "-c"]
 
@@ -71,5 +72,5 @@ ENV NUMBER_OF_GPUS ${NUMBER_OF_GPUS:-16}
 FROM base AS image-machine-dgx-a100
 ENV NUMBER_OF_GPUS 8
 
-FROM image-machine-${DGX_VERSION,,} AS final
+FROM image-machine-${DGX_VERSION_LOWERCASE} AS final
 RUN echo "spark.worker.resource.gpu.amount    ${NUMBER_OF_GPUS}" >> /opt/spark/conf/spark-defaults.conf
