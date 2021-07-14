@@ -57,7 +57,9 @@ ENV PYSPARK_PYTHON /conda/envs/rapids/bin/python
 ENV PYSPARK_DRIVER_PYTHON /conda/envs/rapids/bin/python
 ENV DGX_VERSION $DGX_VERSION
 ENV SPARK_VERSION $SPARK_VERSION
-ENV DGX_VERSION_LOWERCASE $(echo $DGX_VERSION | tr '[:upper:]' '[:lower:]')
+
+# DGX_VERSION to lowercase
+RUN DGX_VERSION_LOWERCASE=$(echo $DGX_VERSION | tr '[:upper:]' '[:lower:]')
 
 SHELL ["/bin/bash", "-c"]
 
