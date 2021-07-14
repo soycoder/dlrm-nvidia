@@ -64,11 +64,11 @@ RUN source activate rapids &&                                  \
     pip install --upgrade pip &&                                \
     pip install --no-cache-dir -r requirements_preprocessing.txt
 
-FROM base AS image-machine-DGX-2
+FROM base AS image-machine-dgx-2
 ARG NUMBER_OF_GPUS
 ENV NUMBER_OF_GPUS ${NUMBER_OF_GPUS:-16}
 
-FROM base AS image-machine-DGX-A100
+FROM base AS image-machine-dgx-a100
 ENV NUMBER_OF_GPUS 8
 
 FROM image-machine-${DGX_VERSION} AS final
