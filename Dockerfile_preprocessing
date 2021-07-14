@@ -59,7 +59,7 @@ ENV DGX_VERSION $DGX_VERSION
 ENV SPARK_VERSION $SPARK_VERSION
 
 # DGX_VERSION to lowercase
-RUN DGX_VERSION_LOWERCASE=$(echo $DGX_VERSION | tr '[:upper:]' '[:lower:]')
+ENV DGX_VERSION_LOWERCASE dgx-2
 
 SHELL ["/bin/bash", "-c"]
 
