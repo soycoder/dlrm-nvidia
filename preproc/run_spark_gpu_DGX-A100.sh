@@ -75,11 +75,11 @@ spark-submit --master $MASTER \
     spark_data_utils.py --mode generate_models \
     $OPTS \
     --input_folder $INPUT_PATH \
-    --days 0-23 \
+    --days 0-2 \
     --model_folder $OUTPUT_PATH/models \
     --write_mode overwrite --low_mem 2>&1 | tee submit_dict_log.txt
 
-echo "Transforming the train data from day_0 to day_22..."
+echo "Transforming the train data from day_0 to day_1..."
 spark-submit --master $MASTER \
     --driver-memory "${DRIVER_MEMORY}G" \
     --executor-cores $NUM_EXECUTOR_CORES \
@@ -104,14 +104,14 @@ spark-submit --master $MASTER \
     --conf spark.executor.extraJavaOptions="-Dcom.nvidia.cudf.prefer-pinned=true\ -Djava.io.tmpdir=$SPARK_LOCAL_DIRS" \
     spark_data_utils.py --mode transform \
     --input_folder $INPUT_PATH \
-    --days 0-22 \
+    --days 0-1 \
     --output_folder $OUTPUT_PATH/train \
     --model_size_file $OUTPUT_PATH/model_size.json \
     --model_folder $OUTPUT_PATH/models \
     --write_mode overwrite --low_mem 2>&1 | tee submit_train_log.txt
 
 echo "Splitting the last day into 2 parts of test and validation..."
-last_day=$INPUT_PATH/day_23
+last_day=$INPUT_PATH/day_2
 temp_test=$OUTPUT_PATH/temp/test
 temp_validation=$OUTPUT_PATH/temp/validation
 mkdir -p $temp_test $temp_validation
@@ -120,10 +120,10 @@ lines=`wc -l $last_day | awk '{print $1}'`
 former=$((lines / 2))
 latter=$((lines - former))
 
-head -n $former $last_day > $temp_test/day_23
-tail -n $latter $last_day > $temp_validation/day_23
+head -n $former $last_day > $temp_test/day_2
+tail -n $latter $last_day > $temp_validation/day_2
 
-echo "Transforming the test data in day_23..."
+echo "Transforming the test data in day_2..."
 spark-submit --master $MASTER \
     --driver-memory "${DRIVER_MEMORY}G" \
     --executor-cores $NUM_EXECUTOR_CORES \
@@ -148,13 +148,13 @@ spark-submit --master $MASTER \
     --conf spark.executor.extraJavaOptions="-Dcom.nvidia.cudf.prefer-pinned=true\ -Djava.io.tmpdir=$SPARK_LOCAL_DIRS" \
     spark_data_utils.py --mode transform \
     --input_folder $temp_test \
-    --days 23-23 \
+    --days 2-2 \
     --output_folder $OUTPUT_PATH/test \
     --output_ordering input \
     --model_folder $OUTPUT_PATH/models \
     --write_mode overwrite --low_mem 2>&1 | tee submit_test_log.txt
 
-echo "Transforming the validation data in day_23..."
+echo "Transforming the validation data in day_2..."
 spark-submit --master $MASTER \
     --driver-memory "${DRIVER_MEMORY}G" \
     --executor-cores $NUM_EXECUTOR_CORES \
@@ -179,7 +179,7 @@ spark-submit --master $MASTER \
     --conf spark.executor.extraJavaOptions="-Dcom.nvidia.cudf.prefer-pinned=true\ -Djava.io.tmpdir=$SPARK_LOCAL_DIRS" \
     spark_data_utils.py --mode transform \
     --input_folder $temp_validation \
-    --days 23-23 \
+    --days 2-2 \
     --output_folder $OUTPUT_PATH/validation \
     --output_ordering input \
     --model_folder $OUTPUT_PATH/models \

@@ -48,7 +48,7 @@ CRITEO_CONTINUOUS_COLUMNS = [f'_c{x}' for x in range(1, 14)]
 CRITEO_CATEGORICAL_COLUMNS = [f'_c{x}' for x in range(14, 40)]
 CRITEO_CLICK_COLUMNS = ['_c0']
 COLUMNS = CRITEO_CONTINUOUS_COLUMNS + CRITEO_CATEGORICAL_COLUMNS + CRITEO_CLICK_COLUMNS
-CRITEO_TRAIN_DAYS = list(range(0, 23))
+CRITEO_TRAIN_DAYS = list(range(0, 2))
 
 ALL_DS_MEM_FRAC = 0.04
 TRAIN_DS_MEM_FRAC = 0.045
@@ -113,15 +113,15 @@ def convert_criteo_to_parquet(
 
     # split last day into two parts
     number_of_lines = int(
-        subprocess.check_output((f'wc -l {os.path.join(input_path, "day_23")}').split()).split()[0])
+        subprocess.check_output((f'wc -l {os.path.join(input_path, "day_2")}').split()).split()[0])
     valid_set_size = number_of_lines // 2
     test_set_size = number_of_lines - valid_set_size
 
-    with open(os.path.join(input_path, "day_23.part1"), "w") as f:
-        subprocess.run(['head', '-n', str(test_set_size), str(os.path.join(input_path, "day_23"))], stdout=f)
+    with open(os.path.join(input_path, "day_2.part1"), "w") as f:
+        subprocess.run(['head', '-n', str(test_set_size), str(os.path.join(input_path, "day_2"))], stdout=f)
 
-    with open(os.path.join(input_path, "day_23.part2"), "w") as f:
-        subprocess.run(['tail', '-n', str(valid_set_size), str(os.path.join(input_path, "day_23"))], stdout=f)
+    with open(os.path.join(input_path, "day_2.part2"), "w") as f:
+        subprocess.run(['tail', '-n', str(valid_set_size), str(os.path.join(input_path, "day_2"))], stdout=f)
 
     fs = get_fs_token_paths(input_path, mode="rb")[0]
     file_list = [
@@ -189,8 +189,8 @@ def preprocess_criteo_parquet(
         for x in os.listdir(input_path)
         if x.startswith("day") and x.split(".")[0].split("_")[-1] in train_days
     ]
-    valid_file = os.path.join(input_path, "day_23.part2.parquet")
-    test_file = os.path.join(input_path, "day_23.part1.parquet")
+    valid_file = os.path.join(input_path, "day_2.part2.parquet")
+    test_file = os.path.join(input_path, "day_2.part1.parquet")
 
     all_set = train_files + [valid_file] + [test_file]
 
