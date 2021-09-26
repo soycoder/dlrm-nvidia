@@ -1,4 +1,4 @@
-/opt/ucx/bin/ucx_info -e -u t
+ucx_info -e -u t
 export UCX_LOG_LEVEL=info
 echo "UCC barrier"
 /bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_barrier_test.py --backend=gloo
