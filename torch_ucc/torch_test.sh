@@ -1,14 +1,14 @@
 ucx_info -e -u t
 export UCX_LOG_LEVEL=info
 echo "UCC barrier"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_barrier_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_barrier_test.py --backend=ucc
 echo "UCC alltoall"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_alltoall_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_alltoall_test.py --backend=ucc
 echo "UCC alltoallv"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_alltoallv_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_alltoallv_test.py --backend=ucc
 echo "UCC allgather"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_allgather_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_allgather_test.py --backend=ucc
 echo "UCC allreduce"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_allreduce_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_allreduce_test.py --backend=ucc
 echo "UCC broadcast"
-/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_bcast_test.py --backend=gloo
+/bin/bash /torch_ucc/test/start_test.sh /torch_ucc/test/torch_bcast_test.py --backend=ucc
